@@ -214,6 +214,11 @@ else
   echo 'Alt Text Evaluator Demo recipe already applied, skipping...'
 fi
 
+#== Apply Fetch MCP Client Demo recipe.
+echo
+echo 'Apply Fetch MCP Client Demo recipe.'
+time drush -q recipe ../recipes/fetch_mcp_client_demo
+
 #== Disable Klaro consent for DeepChat chatbot.
 drush -n cset klaro.klaro_app.deepchat status 0
 
