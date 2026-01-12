@@ -1,0 +1,38 @@
+uuid: 83990629-5d98-46a0-be69-d72141a446c7
+langcode: en
+status: true
+dependencies: {  }
+id: mcp_fetch
+label: 'MCP Fetch'
+description: 'This adds a fetch command that can check a website as markdown'
+endpoint: 'https://remote.mcpservers.org/fetch/mcp'
+transport_type: http
+stdio_command: null
+stdio_env: {  }
+stdio_cwd: null
+timeout: 30
+http_headers: {  }
+tools:
+  fetch:
+    name: fetch
+    description: ''
+    inputSchema:
+      type: object
+      properties:
+        url:
+          type: string
+        max_length:
+          type: number
+          default: 5000
+        start_index:
+          type: number
+          default: 0
+        raw:
+          type: boolean
+          default: false
+      required:
+        - url
+      additionalProperties: false
+      $schema: 'http://json-schema.org/draft-07/schema#'
+enabled_tools:
+  fetch: fetch
