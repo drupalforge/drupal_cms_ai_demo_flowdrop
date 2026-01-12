@@ -1,0 +1,36 @@
+{
+    "name": "drupal/mcp_client",
+    "description": "This module provides MCP (Model Context Protocol) client integration for Drupal",
+    "type": "drupal-module",
+    "keywords": ["Drupal", "MCP", "MCP Client", "AI"],
+    "homepage": "http://drupal.org/project/mcp_client",
+    "support": {
+        "issues": "https://www.drupal.org/project/issues/mcp_client?categories=All",
+        "slack": "https://drupal.slack.com/",
+        "source": "https://git.drupalcode.org/project/mcp_client"
+    },
+    "license": "GPL-2.0-or-later",
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=8.2",
+        "drupal/core": "^10 || ^11",
+        "drupal/key": "^1.18",
+        "drupal/tool": "^1.0@alpha",
+        "swisnl/mcp-client": "^0.3"
+    },
+    "require-dev": {
+        "drush/drush": "^12 || ^13"
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true,
+            "tbachert/spi": true,
+            "composer/installers": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpstan/extension-installer": true,
+            "cweagans/composer-patches": true,
+            "drupal/core-composer-scaffold": true
+        }
+    }
+}
+

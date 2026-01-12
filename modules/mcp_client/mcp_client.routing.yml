@@ -1,0 +1,31 @@
+entity.mcp_server.collection:
+  path: '/admin/structure/mcp-server'
+  defaults:
+    _entity_list: 'mcp_server'
+    _title: 'MCP Server configuration'
+  requirements:
+    _permission: 'administer mcp_server'
+
+entity.mcp_server.add_form:
+  path: '/admin/structure/mcp_server/add'
+  defaults:
+    _entity_form: 'mcp_server.add'
+    _title: 'Add a MCP Server'
+  requirements:
+    _permission: 'administer mcp_server'
+
+entity.mcp_server.edit_form:
+  path: '/admin/structure/mcp-server/{mcp_server}'
+  defaults:
+    _entity_form: 'mcp_server.edit'
+    _title: 'Edit a MCP Server'
+  requirements:
+    _permission: 'administer mcp_server'
+
+entity.mcp_server.delete_form:
+  path: '/admin/structure/mcp-server/{mcp_server}/delete'
+  defaults:
+    _entity_form: 'mcp_server.delete'
+    _title: 'Delete a MCP Server'
+  requirements:
+    _permission: 'administer mcp_server'

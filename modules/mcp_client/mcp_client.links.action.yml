@@ -1,0 +1,5 @@
+entity.mcp_server.add_form:
+  route_name: 'entity.mcp_server.add_form'
+  title: 'Add MCP Server'
+  appears_on:
+    - entity.mcp_server.collection

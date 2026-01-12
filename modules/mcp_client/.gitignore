@@ -1,0 +1,19 @@
+.DS_Store
+
+# Ignore IDE specific files
+.idea/
+.vscode/
+
+# Ignore ddev-drupal-contrib specific files
+/.ddev
+/recipes
+/vendor/
+/web
+/.editorconfig
+/.gitattributes
+
+# Ignore Copilot files
+/.copilot/
+
+# Ignore PHPStan baseline file
+/phpstan-baseline.neon

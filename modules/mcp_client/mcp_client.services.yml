@@ -1,0 +1,10 @@
+services:
+  logger.channel.mcp_client:
+    parent: logger.channel_base
+    arguments: ['mcp_client']
+
+  mcp_client.client_factory:
+    class: Drupal\mcp_client\Service\McpClientFactory
+    arguments:
+      - '@logger.channel.mcp_client'
+      - '@key.repository'

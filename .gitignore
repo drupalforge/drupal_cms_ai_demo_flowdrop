@@ -27,4 +27,5 @@ packages/
 /web/
 modules/*
 !/modules/ai_alttext_tools/
+!/modules/mcp_client/
 !modules/.gitkeep

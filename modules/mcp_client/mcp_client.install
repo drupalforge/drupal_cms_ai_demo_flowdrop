@@ -1,0 +1,98 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the MCP Client module.
+ */
+
+use Drupal\Core\Extension\Requirement\RequirementSeverity;
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
+/**
+ * Implements hook_requirements().
+ *
+ * @phpstan-param string $phase
+ * @phpstan-return array<string, array<string, mixed>>
+ */
+function mcp_client_requirements(string $phase): array {
+  $requirements = [];
+
+  // Check PHP version for SwisNL library compatibility.
+  if ($phase === 'runtime' || $phase === 'install') {
+    $requirements['mcp_client_php_version'] = [
+      'title' => t('MCP Client PHP Version'),
+      'value' => PHP_VERSION,
+    ];
+
+    if (version_compare(PHP_VERSION, '8.2.0', '<')) {
+      $requirements['mcp_client_php_version']['severity'] = RequirementSeverity::Error;
+      $requirements['mcp_client_php_version']['description'] = t(
+        'MCP Client requires PHP 8.2 or higher. You are running @version.',
+        ['@version' => PHP_VERSION]
+      );
+    }
+    else {
+      $requirements['mcp_client_php_version']['severity'] = RequirementSeverity::OK;
+    }
+  }
+
+  return $requirements;
+}
+
+/**
+ * Add transport type and configuration fields to existing MCP servers.
+ *
+ * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+ *   The result message.
+ */
+function mcp_client_update_10001(): TranslatableMarkup {
+  $config_factory = \Drupal::configFactory();
+  $updated_count = 0;
+
+  // Update all existing MCP server configurations.
+  foreach ($config_factory->listAll('mcp_client.mcp_server.') as $config_name) {
+    $config = $config_factory->getEditable($config_name);
+
+    // Set default transport type to http if not set.
+    if (!$config->get('transport_type')) {
+      $config->set('transport_type', 'http');
+      $updated_count++;
+    }
+
+    // Set default timeout if not set.
+    if (!$config->get('timeout')) {
+      $config->set('timeout', 30);
+    }
+
+    // Initialize empty arrays for new fields if not set.
+    if ($config->get('stdio_env') === NULL) {
+      $config->set('stdio_env', []);
+    }
+
+    if ($config->get('http_headers') === NULL) {
+      $config->set('http_headers', []);
+    }
+
+    $config->save();
+  }
+
+  // Clear all caches to ensure new services and schema are loaded.
+  drupal_flush_all_caches();
+
+  return new TranslatableMarkup('Added transport type configuration to @count MCP server(s). All caches have been cleared.', [
+    '@count' => $updated_count,
+  ]);
+}
+
+/**
+ * Clear plugin cache after SwisNL library integration.
+ *
+ * @return \Drupal\Core\StringTranslation\TranslatableMarkup
+ *   The result message.
+ */
+function mcp_client_update_10002(): TranslatableMarkup {
+  // Clear the AI function calls plugin cache.
+  \Drupal::service('plugin.manager.ai.function_calls')->clearCachedDefinitions();
+
+  return new TranslatableMarkup('Cleared AI function calls plugin cache to ensure compatibility with SwisNL MCP Client library.');
+}

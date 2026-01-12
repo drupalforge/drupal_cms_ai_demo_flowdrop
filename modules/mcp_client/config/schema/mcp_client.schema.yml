@@ -1,0 +1,66 @@
+mcp_client.mcp_server.*:
+  type: config_entity
+  label: MCP Server
+  mapping:
+    id:
+      type: string
+      label: ID
+    label:
+      type: label
+      label: Label
+    uuid:
+      type: string
+      label: UUID
+    description:
+      type: string
+      label: Description
+    endpoint:
+      type: string
+      label: Endpoint
+    transport_type:
+      type: string
+      label: Transport Type
+    stdio_command:
+      type: string
+      label: STDIO Command
+    stdio_env:
+      type: sequence
+      label: STDIO Environment Variables
+      sequence:
+        type: mapping
+        label: Environment Variable
+        mapping:
+          type:
+            type: string
+            label: Type
+          value:
+            type: string
+            label: Value
+          key_id:
+            type: string
+            label: Key ID
+    stdio_cwd:
+      type: string
+      label: STDIO Working Directory
+    timeout:
+      type: integer
+      label: Timeout
+    http_headers:
+      type: mapping
+      label: HTTP Headers
+      mapping:
+        Authorization_key:
+          type: string
+          label: Authorization Key ID
+        Authorization_prefix:
+          type: string
+          label: Authorization Prefix
+    tools:
+      # Just use ignore for the tools mapping since it's complex and dynamic.
+      type: ignore
+      label: Available Tools
+    enabled_tools:
+      type: sequence
+      label: Enabled Tools
+      sequence:
+        type: string
