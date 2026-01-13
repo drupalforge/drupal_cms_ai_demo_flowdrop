@@ -2,7 +2,7 @@
 
 - **Issue**: [#3567208](https://www.drupal.org/project/flowdrop_ui_agents/issues/3567208)
 - **Branch**: `3567208-fix-flowdrop-ui-saving-incorrectly`
-- **Status**: Minimal patch applied - upstream fixed most issues, patch adds `description_override` handling
+- **Status**: ✅ RESOLVED - Fix merged upstream in ai_agents (commit c3540a3)
 - **Related**: [#3566777](https://www.drupal.org/project/flowdrop_ui_agents/issues/3566777) (Property Restrictions Not Persisting)
 
 ---
@@ -397,13 +397,22 @@ tool_usage_limits:
       values: ''
 ```
 
-### Remaining Tasks
+### Resolution
 
-- [ ] Manual test: Save via FlowDrop Agent editor with description_override set
-- [ ] Submit updated patch to upstream ai_agents module
-- [ ] Test that patch applies automatically via composer
+Fix was merged upstream in `ai_agents` module (commit `c3540a3`).
+
+**Actions taken:**
+- [x] Submitted patch to upstream ai_agents module
+- [x] Patch merged upstream
+- [x] Removed local patch from composer.json
+- [x] Deleted `patches/ai_agents-fix-tool-settings-save.patch`
+- [x] Updated ai_agents via composer to `c3540a3`
+
+**Upstream now handles:**
+- ✅ `description_override` - extracted to tool_settings (line 486)
+- ✅ `str_contains` safety check - skips keys without `___` (line 496)
 
 ---
 
 *Created: 2025-01-13*
-*Updated: 2025-01-13 - Verification after composer update*
+*Resolved: 2025-01-13 - Fix merged upstream in ai_agents*
