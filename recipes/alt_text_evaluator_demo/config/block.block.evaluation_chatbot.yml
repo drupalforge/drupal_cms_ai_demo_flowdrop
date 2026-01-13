@@ -7,8 +7,8 @@ dependencies:
   theme:
     - drupal_cms_olivero
 id: evaluation_chatbot
-theme: drupal_cms_olivero
-region: footer_bottom
+theme: gin
+region: content
 weight: 0
 provider: null
 plugin: ai_deepchat_block
@@ -25,10 +25,10 @@ settings:
   use_avatar: 0
   default_avatar: ''
   first_message: 'I can tell you about the alt text evaluation for the media entity.'
-  stream: 0
+  stream: null
   toggle_state: remember
-  width: 500px
-  height: 500px
+  width: auto
+  height: 100%
   placement: toolbar
   show_structured_results: false
   show_copy_icon: true
