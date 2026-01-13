@@ -4,6 +4,37 @@
 - **Branch**: `3565646-add-chatbot-agents`
 - **Status**: In progress
 
+## Tool Saving Bugs (Regression)
+
+### Reported symptoms
+- FlowDrop UI does not reflect existing tool config on Bundle Lister Agent:
+  - `node_type` property restriction (forced to "node") not shown.
+  - "Override property description" (set to "cheese") not shown.
+- Saving edits in the Agent route does not persist to tool config.
+
+### Goals
+- Ensure FlowDrop UI loads and displays tool restrictions/overrides for agents.
+- Ensure saving from Agent route persists tool config changes.
+- Add regression tests that would have caught this.
+
+### Immediate investigation checklist
+- Compare module code with `main` to pick up fixes from [#3566777](https://www.drupal.org/project/flowdrop_ui_agents/issues/3566777).
+- Verify API payload for the Bundle Lister Agent includes the restriction/override data.
+- Trace hydration of tool config into FlowDrop UI (agent route).
+- Confirm save path maps UI changes back into the workflow/agent config.
+
+### Hypotheses + falsifiable tests
+1) **Hydration mismatch**: tool restriction fields exist in API response but are dropped in the UI mapper.
+   - Test: log/inspect workflow payload in `WorkflowControllerTest` to confirm restriction data exists.
+2) **Save mapper mismatch**: UI changes saved but dropped before persistence.
+   - Test: create a kernel test that saves forced values + override description and confirms config is persisted.
+3) **Old module code**: regression already fixed in `main` but not in this branch.
+   - Test: git diff against `main` for `modules/flowdrop_ui_agents` and bring in missing commits.
+
+### Tests to add
+- Kernel test: tool restriction load + save for agent route (force value + description override).
+- Kernel test: persisted config after save reflects restriction values.
+
 ## Goal
 
 Add clear, category-level creation controls in the FlowDrop UI sidebar so users can create new Chatbots and Sub-agents directly from the editor, with the proper editing scope rules enforced.
