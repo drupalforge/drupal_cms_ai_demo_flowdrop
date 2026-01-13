@@ -1,0 +1,26 @@
+diff --git a/src/Plugin/ModelerApiModelOwner/Agent.php b/src/Plugin/ModelerApiModelOwner/Agent.php
+index 2c9aaa3..f1d3b8c 100644
+--- a/src/Plugin/ModelerApiModelOwner/Agent.php
++++ b/src/Plugin/ModelerApiModelOwner/Agent.php
+@@ -481,14 +481,20 @@ class Agent extends ModelOwnerBase {
+         $elementSettings[$id] = [
+           'progress_message' => $config['progress_message'] ?? "",
+           'use_artifacts' => $config['use_artifacts'] ?? FALSE,
+           'require_usage' => $config['require_usage'] ?? FALSE,
+           'return_directly' => $config['return_directly'] ?? FALSE,
++          'description_override' => $config['description_override'] ?? '',
+         ];
+         $config += $this->ownerComponentDefaultConfig(Api::COMPONENT_TYPE_ELEMENT, $id);
+         unset($config['use_artifacts']);
+         unset($config['return_directly']);
+         unset($config['progress_message']);
+         unset($config['require_usage']);
++        unset($config['description_override']);
+         foreach ($config as $key => $value) {
++          // Only process keys in property restriction format (propName___field).
++          if (!str_contains($key, '___')) {
++            continue;
++          }
+           [$plugin, $field] = explode('___', $key);
+           $plugin = str_replace('__colon__', ':', $plugin);
+           $value = match ($field) {

@@ -149,6 +149,60 @@ Api::COMPONENT_TYPE_LINK = 5        // Edge/connection
 
 ## Common Gotchas
 
+### Agent Route vs Assistant Route Save Paths (CRITICAL)
+
+There are **two different save paths** with different behaviors:
+
+| Route | Save Endpoint | Controller | Notes |
+|-------|--------------|------------|-------|
+| Assistant | `/api/flowdrop-agents/assistant/{id}/save` | `AssistantSaveController` | Custom controller, handles all settings correctly |
+| Agent | `/admin/modeler_api/ai_agent/flowdrop_agents/save` | `Agent.php` ModelOwner | Uses Modeler API, only handles `return_directly` + property restrictions |
+
+**The Agent ModelOwner expects keys in specific format:**
+- `return_directly` → extracted to `tool_settings`
+- `propName___action`, `propName___hide_property`, `propName___values` → processed as property restrictions
+
+**If WorkflowParser sends keys like `require_usage` (without `___`):**
+```php
+explode('___', 'require_usage') → ['require_usage']  // Single element!
+[$plugin, $field] = ... → $field becomes empty string
+$elementUsageLimits[$id]['require_usage'][''] = 0  // Malformed!
+```
+
+**Fix**: WorkflowParser must NOT send keys the Agent ModelOwner doesn't understand.
+
+See Issue [#3567208](https://www.drupal.org/project/flowdrop_ui_agents/issues/3567208) for details.
+
+### Tool Settings vs Tool Usage Limits
+
+Two separate config arrays with different purposes:
+
+```php
+// tool_settings - behavioral settings per tool
+'tool_settings' => [
+  'tool:entity_list' => [
+    'return_directly' => FALSE,
+    'require_usage' => FALSE,
+    'use_artifacts' => FALSE,
+    'description_override' => '',
+    'progress_message' => '',
+  ],
+],
+
+// tool_usage_limits - property restrictions per tool
+'tool_usage_limits' => [
+  'tool:entity_list' => [
+    'entity_type' => [
+      'action' => 'force_value',
+      'hide_property' => 0,
+      'values' => ['node'],
+    ],
+  ],
+],
+```
+
+**Never mix these up** - behavioral settings go to `tool_settings`, property restrictions go to `tool_usage_limits`.
+
 ### JavaScript getWorkflow() Timing
 Use `editorContainer.flowdropApp` NOT `window.currentFlowDropApp` - the navbar onclick handler fires before the global is set.
 
