@@ -1,0 +1,9 @@
+parameters:
+  level: 2
+  paths:
+    - web/modules/contrib/flowdrop_ui_agents
+  excludePaths:
+    - */tests/*
+    - */node_modules/*
+  drupal:
+    drupal_root: web

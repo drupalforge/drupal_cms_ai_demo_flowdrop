@@ -7,13 +7,13 @@ Per-branch tracking for the current work session.
 | Repo | Branch | Issue |
 |------|--------|-------|
 | Demo site (this repo) | `main` | - |
-| flowdrop_ui_agents | `3565644-bring-chatbots-into` | [#3565644](https://www.drupal.org/project/flowdrop_ui_agents/issues/3565644) |
+| flowdrop_ui_agents | `3565646-add-chatbot-agents` | [#3565646](https://www.drupal.org/project/flowdrop_ui_agents/issues/3565646) |
 
 ## Active Work
 
-**Issue #3565644 - Bring Chatbots into FlowDrop UI**: Add DeepChat chatbot nodes to the FlowDrop UI, allowing users to visually connect chatbots to assistants.
+**Issue #3565646 - Add Chatbot/Agent Creation UI**: Add creation controls for chatbots, agents, sub-agents, and assistants in the FlowDrop sidebar with proper edit scope rules.
 
-See: `.claude/plans/current/do-3565644-bring-chatbots-into.md`
+See: `.claude/plans/current/do-3565646-ability-to-add-agents.md`
 
 ## Test URLs
 
@@ -30,7 +30,7 @@ cd modules/flowdrop_ui_agents && git branch --show-current
 cd modules/flowdrop_ui_agents && git log --oneline 1.0.x..HEAD
 
 # Push module to drupal.org
-cd modules/flowdrop_ui_agents && git push flowdrop_ui_agents-3565644 3565644-bring-chatbots-into
+cd modules/flowdrop_ui_agents && git push flowdrop_ui_agents-3565646 3565646-add-chatbot-agents
 
 # Clear Drupal cache after changes
 ddev drush cr
