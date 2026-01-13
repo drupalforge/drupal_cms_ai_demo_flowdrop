@@ -1,14 +1,14 @@
-uuid: 5c72237e-0f2c-45de-8bd7-d77d16094de3
+uuid: 935ca33b-e637-4137-aad4-07af534ce84f
 langcode: en
 status: true
 dependencies:
   module:
     - ai_chatbot
   theme:
-    - drupal_cms_olivero
-id: evaluation_chatbot
-theme: drupal_cms_olivero
-region: footer_bottom
+    - gin
+id: gin_evaluation_chatbot
+theme: gin
+region: content
 weight: 0
 provider: null
 plugin: ai_deepchat_block
@@ -25,10 +25,10 @@ settings:
   use_avatar: 0
   default_avatar: ''
   first_message: 'I can tell you about the alt text evaluation for the media entity.'
-  stream: 0
+  stream: null
   toggle_state: remember
-  width: 500px
-  height: 500px
+  width: auto
+  height: 100%
   placement: toolbar
   show_structured_results: false
   show_copy_icon: true
