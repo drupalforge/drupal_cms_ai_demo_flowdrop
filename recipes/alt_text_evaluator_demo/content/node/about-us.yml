@@ -1,0 +1,47 @@
+_meta:
+  version: '1.0'
+  entity_type: node
+  uuid: 4b97b38b-2c1a-4eb0-aab3-410460763d82
+  bundle: page
+  default_langcode: en
+  depends:
+    6b1322dc-ef1e-4479-9f25-de5a53d2156a: media
+default:
+  revision_uid:
+    -
+      target_id: 1
+  status:
+    -
+      value: true
+  uid:
+    -
+      target_id: 1
+  title:
+    -
+      value: 'About Us'
+  promote:
+    -
+      value: false
+  sticky:
+    -
+      value: false
+  revision_translation_affected:
+    -
+      value: true
+  moderation_state:
+    -
+      value: published
+  path:
+    -
+      alias: /about-us
+      langcode: en
+  field_content:
+    -
+      value: "<p>Welcome to our organization, where innovation meets excellence. For over a decade, we've been committed to delivering outstanding solutions that make a real difference in our customers' lives.</p><p>Our team comprises dedicated professionals who bring expertise, creativity, and passion to every project. We believe in building lasting relationships with our clients through transparency, quality service, and continuous improvement.</p><p>Our mission is to provide cutting-edge solutions while maintaining the highest standards of integrity and customer satisfaction. We take pride in our collaborative approach, working closely with our clients to understand their unique needs and deliver tailored solutions that exceed expectations.</p>"
+      format: content_format
+  field_description:
+    -
+      value: "Welcome to our organization, where innovation meets excellence. For over a decade, we've been committed to delivering outstanding solutions that make a real difference in our customers' lives.\r\n"
+  field_featured_image:
+    -
+      entity: 6b1322dc-ef1e-4479-9f25-de5a53d2156a

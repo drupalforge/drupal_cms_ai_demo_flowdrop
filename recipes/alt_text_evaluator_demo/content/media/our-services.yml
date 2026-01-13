@@ -1,0 +1,35 @@
+_meta:
+  version: '1.0'
+  entity_type: media
+  uuid: bcf170e9-73fa-4d79-9eff-da87190c070c
+  bundle: image
+  default_langcode: en
+  depends:
+    b31e7199-9f96-43b4-a4b2-4983cae54f54: file
+default:
+  status:
+    -
+      value: true
+  uid:
+    -
+      target_id: 1
+  name:
+    -
+      value: 'Our Services'
+  revision_translation_affected:
+    -
+      value: true
+  moderation_state:
+    -
+      value: published
+  path:
+    -
+      langcode: en
+      alias: null
+  field_media_image:
+    -
+      alt: services
+      title: ''
+      width: 1080
+      height: 1080
+      entity: b31e7199-9f96-43b4-a4b2-4983cae54f54

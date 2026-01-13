@@ -1,0 +1,47 @@
+_meta:
+  version: '1.0'
+  entity_type: node
+  uuid: a6177cb7-1410-4c4a-973c-ca8051a4069d
+  bundle: page
+  default_langcode: en
+  depends:
+    bcf170e9-73fa-4d79-9eff-da87190c070c: media
+default:
+  revision_uid:
+    -
+      target_id: 1
+  status:
+    -
+      value: true
+  uid:
+    -
+      target_id: 1
+  title:
+    -
+      value: 'Our Services'
+  promote:
+    -
+      value: false
+  sticky:
+    -
+      value: false
+  revision_translation_affected:
+    -
+      value: true
+  moderation_state:
+    -
+      value: published
+  path:
+    -
+      alias: /our-services
+      langcode: en
+  field_content:
+    -
+      value: "<p>We offer a comprehensive range of services designed to help your business thrive in today's competitive landscape.</p><p><strong>Digital Solutions:</strong> From web development to mobile applications, we create digital experiences that engage and convert. Our developers use the latest technologies and best practices to build robust, scalable solutions.</p><p><strong>Consulting Services:</strong> Our expert consultants work with you to identify opportunities, overcome challenges, and develop strategies for sustainable growth. We provide actionable insights backed by industry knowledge and data-driven analysis.</p>"
+      format: content_format
+  field_description:
+    -
+      value: "We offer a comprehensive range of services designed to help your business thrive in today's competitive landscape."
+  field_featured_image:
+    -
+      entity: bcf170e9-73fa-4d79-9eff-da87190c070c

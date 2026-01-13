@@ -1,0 +1,35 @@
+_meta:
+  version: '1.0'
+  entity_type: media
+  uuid: 3f446c6f-e28b-427f-8c6e-cc1d504415c8
+  bundle: image
+  default_langcode: en
+  depends:
+    ca8158da-7732-4a4c-b2c8-95200a2b015c: file
+default:
+  status:
+    -
+      value: true
+  uid:
+    -
+      target_id: 1
+  name:
+    -
+      value: 'Contact Us'
+  revision_translation_affected:
+    -
+      value: true
+  moderation_state:
+    -
+      value: published
+  path:
+    -
+      langcode: en
+      alias: null
+  field_media_image:
+    -
+      alt: test
+      title: ''
+      width: 1080
+      height: 1080
+      entity: ca8158da-7732-4a4c-b2c8-95200a2b015c

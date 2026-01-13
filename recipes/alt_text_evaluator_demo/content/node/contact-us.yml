@@ -1,0 +1,47 @@
+_meta:
+  version: '1.0'
+  entity_type: node
+  uuid: 8c277290-ad7c-4cc6-b789-aa8eb0b132a7
+  bundle: page
+  default_langcode: en
+  depends:
+    3f446c6f-e28b-427f-8c6e-cc1d504415c8: media
+default:
+  revision_uid:
+    -
+      target_id: 1
+  status:
+    -
+      value: true
+  uid:
+    -
+      target_id: 1
+  title:
+    -
+      value: 'Contact Us'
+  promote:
+    -
+      value: false
+  sticky:
+    -
+      value: false
+  revision_translation_affected:
+    -
+      value: true
+  moderation_state:
+    -
+      value: published
+  path:
+    -
+      alias: /contact-us
+      langcode: en
+  field_content:
+    -
+      value: "<p>We'd love to hear from you! Whether you have a question about our services, need a quote, or want to discuss a potential project, our team is ready to help.</p><p><strong>Get in Touch:</strong> Reach out to us through any of the channels below, and we'll respond promptly to your inquiry.</p><p><strong>Office Hours:</strong> Monday - Friday, 9:00 AM - 6:00 PM</p>"
+      format: content_format
+  field_description:
+    -
+      value: "We'd love to hear from you! Whether you have a question about our services, need a quote, or want to discuss a potential project, our team is ready to help."
+  field_featured_image:
+    -
+      entity: 3f446c6f-e28b-427f-8c6e-cc1d504415c8
