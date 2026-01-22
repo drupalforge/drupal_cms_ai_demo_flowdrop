@@ -53,4 +53,19 @@ Before running the setup command, make sure you have your OpenAI API key configu
 
 If you need to modify FlowDrop itself (Svelte + @xyflow/svelte), see:
 
-- `docs/flowdrop-build.md`
+- `.claude/flowdrop-build.md`
+
+### Enable MCP
+
+# Enable all plugins (default)
+ddev flowdrop-dev-mcp enable
+
+# Other MCP Commands
+ddev flowdrop-dev-mcp disable
+ddev flowdrop-dev-mcp status
+
+# Enable only specific plugins
+ddev flowdrop-dev-mcp enable --plugins aia          # Only AI agents
+ddev flowdrop-dev-mcp enable --plugins tools        # Only Drupal tools
+ddev flowdrop-dev-mcp enable --plugins aia,tools    # Both (same as default)
+```

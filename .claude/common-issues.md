@@ -1,9 +1,9 @@
 # Common Issues
 
-## Blue line under Chatbots category
+## Blue line under FlowDrop UI Components categories
 
 ### Symptom
-- A thin blue line (focus ring) appears under the Chatbots category header when clicked or focused.
+- A thin blue line (focus ring) appears under the a Component category such as chatbot header when clicked or focused.
 
 ### Cause
 - The Chatbots category is injected via cloned markup and ends up getting a focus box-shadow on the category `<summary>`.
@@ -23,7 +23,7 @@
   }
   ```
 
-## Chatbot category styling (icon color, plus icon)
+## Flowdrop UI Component category styling (icon color, plus icon) (such as Chatbot)
 
 ### Where to change Chatbot sidebar styling
 - **JS injection (category + icon)**:
@@ -32,7 +32,18 @@
   - The Chatbot icon is set by `chatbotSvg` and applied to the category summary icon.
   - The “New Chatbot” button uses `plusSvg` for the icon.
 
-### Where to change Chatbot sidebar colors
+### Where to change Flowdrop UI Component sidebar colors (such as Chatbot)
+- **CSS for category icon color**:
+  - `modules/flowdrop_ui_agents/css/flowdrop-agents-editor.css`
+  - Selector:
+    ```css
+    [aria-label="Components sidebar"] .flowdrop-details[data-sidebar-styled][data-is-chatbot="true"] .flowdrop-node-icon,
+    .flowdrop-sidebar .flowdrop-details[data-sidebar-styled][data-is-chatbot="true"] .flowdrop-node-icon {
+        background-color: var(--color-ref-purple-500, #a855f7) !important;
+    }
+    ```
+
+### Where to change Flowdrop UI Component sidebar colors
 - **CSS for category icon color**:
   - `modules/flowdrop_ui_agents/css/flowdrop-agents-editor.css`
   - Selector:

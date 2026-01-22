@@ -1,0 +1,258 @@
+#!/usr/bin/env bash
+
+## Description: Enable/disable MCP server for Claude Code integration
+## Usage: flowdrop-dev-mcp [enable|disable|status] [--plugins PLUGINS]
+## Example: "ddev flowdrop-dev-mcp enable"
+## Example: "ddev flowdrop-dev-mcp enable --plugins aia"
+## Example: "ddev flowdrop-dev-mcp enable --plugins aia,tools"
+## ExecRaw: true
+
+set -e
+
+cd "$DDEV_APPROOT" || exit 1
+
+# Parse arguments
+COMMAND="${1:-status}"
+PLUGINS="aia,tools"  # Default: enable both plugins
+
+shift || true
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --plugins)
+      PLUGINS="$2"
+      shift 2
+      ;;
+    *)
+      shift
+      ;;
+  esac
+done
+
+# Get the actual DDEV URL dynamically
+get_ddev_url() {
+  ddev describe -j 2>/dev/null | python3 -c "import sys,json; print(json.load(sys.stdin)['raw']['primary_url'])" 2>/dev/null || echo ""
+}
+
+show_status() {
+  echo "MCP Server Status"
+  echo "================="
+
+  if [ -f ".mcp.json" ]; then
+    echo "Config:   .mcp.json exists"
+    CONFIGURED_URL=$(python3 -c "import json; print(json.load(open('.mcp.json'))['mcpServers']['drupal-local']['args'][1])" 2>/dev/null || echo "unknown")
+    echo "URL:      $CONFIGURED_URL"
+  else
+    echo "Config:   .mcp.json does not exist (MCP disabled)"
+  fi
+
+  if [ -f "bin/mcp-server-drupal" ]; then
+    echo "Binary:   bin/mcp-server-drupal exists"
+  else
+    echo "Binary:   Not downloaded"
+  fi
+
+  # Check if MCP module is enabled
+  MCP_ENABLED=$(ddev drush pm:list --status=enabled --format=list 2>/dev/null | grep -c "^mcp$" || echo "0")
+  if [ "$MCP_ENABLED" = "1" ]; then
+    echo "Module:   MCP module is enabled"
+  else
+    echo "Module:   MCP module is NOT enabled"
+  fi
+
+  echo ""
+  if [ -f ".mcp.json" ]; then
+    echo "Claude Code: Restart to connect to MCP server"
+  else
+    echo "Claude Code: Run 'ddev flowdrop-dev-mcp enable' to set up"
+  fi
+}
+
+enable_mcp() {
+  echo "Enabling MCP server for Claude Code..."
+  echo ""
+
+  # Get DDEV URL
+  DDEV_URL=$(get_ddev_url)
+  if [ -z "$DDEV_URL" ]; then
+    echo "Error: Could not determine DDEV URL. Is DDEV running?"
+    echo "Try: ddev start"
+    exit 1
+  fi
+  echo "DDEV URL: $DDEV_URL"
+
+  # Install MCP module if not present
+  echo ""
+  echo "Installing MCP module..."
+  ddev composer require drupal/mcp --no-interaction 2>/dev/null || true
+
+  # Enable MCP module
+  echo "Enabling MCP module..."
+  ddev drush en mcp -y 2>/dev/null || true
+
+  # Configure MCP plugins based on --plugins argument
+  echo "Configuring MCP plugins: $PLUGINS"
+
+  # Convert comma-separated plugins to PHP array check
+  ENABLE_AIA="FALSE"
+  ENABLE_TOOLS="FALSE"
+
+  if [[ "$PLUGINS" == *"aia"* ]]; then
+    ENABLE_AIA="TRUE"
+  fi
+  if [[ "$PLUGINS" == *"tools"* ]]; then
+    ENABLE_TOOLS="TRUE"
+  fi
+
+  ddev drush php:eval "
+\$config = \\Drupal::configFactory()->getEditable('mcp.settings');
+\$plugins = [
+  'general' => ['enabled' => TRUE, 'config' => []],
+  'tools' => ['enabled' => $ENABLE_TOOLS, 'roles' => ['anonymous', 'authenticated'], 'config' => []],
+  'aia' => ['enabled' => $ENABLE_AIA, 'roles' => ['anonymous', 'authenticated'], 'config' => []]
+];
+\$config->set('plugins', \$plugins)->save();
+"
+
+  # Grant permissions for local dev
+  echo "Granting MCP permissions..."
+  ddev drush role:perm:add anonymous 'use mcp server' 2>/dev/null || true
+  ddev drush role:perm:add anonymous 'administer tool' 2>/dev/null || true
+  ddev drush role:perm:add anonymous 'administer ai_agent' 2>/dev/null || true
+  ddev drush role:perm:add anonymous 'administer content types' 2>/dev/null || true
+  ddev drush role:perm:add anonymous 'administer site configuration' 2>/dev/null || true
+
+  # Download binary if needed
+  if [ ! -f "bin/mcp-server-drupal" ]; then
+    echo "Downloading MCP server bridge binary..."
+    mkdir -p bin
+
+    OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+    ARCH=$(uname -m)
+
+    if [ "$OS" = "darwin" ]; then
+      if [ "$ARCH" = "arm64" ]; then
+        BINARY="mcp-server-drupal_darwin_arm"
+      else
+        BINARY="mcp-server-drupal_darwin_x86"
+      fi
+    elif [ "$OS" = "linux" ]; then
+      if [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
+        BINARY="mcp-server-drupal_linux_arm"
+      else
+        BINARY="mcp-server-drupal_linux_x86"
+      fi
+    else
+      echo "Warning: Unsupported OS ($OS). MCP binary not downloaded."
+      BINARY=""
+    fi
+
+    if [ -n "$BINARY" ]; then
+      curl -sL "https://github.com/Omedia/mcp-server-drupal/releases/download/v1.0.0-alpha2/$BINARY" -o bin/mcp-server-drupal
+      chmod +x bin/mcp-server-drupal
+      echo "Downloaded: bin/mcp-server-drupal"
+    fi
+  else
+    echo "Binary already exists: bin/mcp-server-drupal"
+  fi
+
+  # Generate .mcp.json with dynamic URL
+  echo "Creating .mcp.json with URL: $DDEV_URL"
+  cat > .mcp.json << EOF
+{
+  "mcpServers": {
+    "drupal-local": {
+      "command": "./bin/mcp-server-drupal",
+      "args": ["--drupal-url", "$DDEV_URL"],
+      "env": {}
+    }
+  }
+}
+EOF
+
+  # Clear cache
+  ddev drush cr
+
+  # Count tools based on enabled plugins
+  TOOL_INFO=""
+  if [ "$ENABLE_AIA" = "TRUE" ] && [ "$ENABLE_TOOLS" = "TRUE" ]; then
+    TOOL_INFO="56 tools (14 AI agents + 42 Drupal tools)"
+  elif [ "$ENABLE_AIA" = "TRUE" ]; then
+    TOOL_INFO="14 AI agents (aia plugin only)"
+  elif [ "$ENABLE_TOOLS" = "TRUE" ]; then
+    TOOL_INFO="42 Drupal tools (tools plugin only)"
+  fi
+
+  echo ""
+  echo "============================================================"
+  echo "MCP server ENABLED"
+  echo ""
+  echo "Plugins: $PLUGINS"
+  echo "Tools:   $TOOL_INFO"
+  echo ""
+  if [ "$ENABLE_TOOLS" = "TRUE" ]; then
+    echo "  tools_* - Entity operations, field management, ai_agent_agent"
+  fi
+  if [ "$ENABLE_AIA" = "TRUE" ]; then
+    echo "  aia_*   - AI agents invokable with prompts"
+  fi
+  echo ""
+  echo "Endpoint: ${DDEV_URL}/mcp/post"
+  echo ""
+  echo ">>> RESTART CLAUDE CODE to connect <<<"
+  echo "============================================================"
+}
+
+disable_mcp() {
+  echo "Disabling MCP server for Claude Code..."
+
+  # Remove .mcp.json
+  if [ -f ".mcp.json" ]; then
+    rm .mcp.json
+    echo "Removed: .mcp.json"
+  else
+    echo ".mcp.json already removed"
+  fi
+
+  echo ""
+  echo "============================================================"
+  echo "MCP server DISABLED"
+  echo ""
+  echo "The MCP module and binary are still installed but Claude Code"
+  echo "will no longer connect to them."
+  echo ""
+  echo ">>> RESTART CLAUDE CODE to disconnect <<<"
+  echo "============================================================"
+}
+
+# Main
+case "$COMMAND" in
+  enable)
+    enable_mcp
+    ;;
+  disable)
+    disable_mcp
+    ;;
+  status)
+    show_status
+    ;;
+  *)
+    echo "Usage: ddev flowdrop-dev-mcp [enable|disable|status] [OPTIONS]"
+    echo ""
+    echo "Commands:"
+    echo "  enable   - Install and configure MCP server, create .mcp.json"
+    echo "  disable  - Remove .mcp.json (Claude Code won't connect)"
+    echo "  status   - Show current MCP configuration status"
+    echo ""
+    echo "Options:"
+    echo "  --plugins PLUGINS  - Comma-separated list of plugins to enable"
+    echo "                       Available: aia, tools (default: aia,tools)"
+    echo ""
+    echo "Examples:"
+    echo "  ddev flowdrop-dev-mcp enable                    # Enable all plugins"
+    echo "  ddev flowdrop-dev-mcp enable --plugins aia      # Only AI agents"
+    echo "  ddev flowdrop-dev-mcp enable --plugins tools    # Only Drupal tools"
+    echo ""
+    echo "See .claude/mcp.md for detailed documentation"
+    exit 1
+    ;;
+esac

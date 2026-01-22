@@ -65,6 +65,11 @@ ddev drush recipe <path>      # Apply a recipe
 
 # Development setup
 ddev setup-flowdrop-dev       # Set up FlowDrop development environment (see below)
+
+# MCP Server (Claude Code integration)
+ddev flowdrop-dev-mcp enable  # Enable MCP tools for agent development
+ddev flowdrop-dev-mcp disable # Disable MCP tools
+ddev flowdrop-dev-mcp status  # Check MCP status
 ```
 
 **Site URL**: `http://drupal-cms-ai-demo-flowdrop.ddev.site`
@@ -72,19 +77,7 @@ ddev setup-flowdrop-dev       # Set up FlowDrop development environment (see bel
 
 ### Environment Variables
 
-OpenAI API key is required for AI features. Configure it globally for DDEV:
-
-```bash
-# Add to ~/.ddev/global_config.yaml
-web_environment:
-  - OPENAI_API_KEY=sk-your-key-here
-```
-
-Or configure per-project:
-
-```bash
-ddev config global --web-environment-add="OPENAI_API_KEY=sk-your-key-here"
-```
+OpenAI API key is required for AI features. Configured globally for DDEV and documented in the readme.md
 
 ## FlowDrop Module Development
 
@@ -94,7 +87,6 @@ ddev config global --web-environment-add="OPENAI_API_KEY=sk-your-key-here"
 # Clone the module and set up development environment
 ddev setup-flowdrop-dev
 ```
-
 This command:
 1. Clones `flowdrop_ui_agents` from drupal.org into `modules/`
 2. Removes the Composer-installed version from `web/modules/contrib/`
@@ -136,6 +128,7 @@ Both processes run similar setup steps but with different environment variables 
 | Directory                          | Purpose                                              |
 |------------------------------------|------------------------------------------------------|
 | `modules/`                         | Local dev modules (git-ignored, cloned during setup) |
+| `patches/`                         | Patches used during the build, README.me for process |
 | `web/modules/contrib/`             | Composer-managed contrib modules (committed)         |
 | `recipes/`                         | Drupal recipes for content types and AI agent demos  |
 | `recipes/bundle_lister_demo/`      | Demo AI agent that lists content bundles             |
@@ -160,6 +153,20 @@ This demo showcases the integration of several AI and FlowDrop modules:
 
 ### Common Pitfalls
 
+Found in `/.claude/common-issues.md` including.
+
+- Blue line under FlowDrop UI Components categories
+- Flowdrop UI Component category styling (icon color, plus icon) (such as Chatbot)
+- Sidebar category order (Sub-Agent Tools, Chatbots first)
+
+#### Patches
+
+Local patches that Composer applies via `patches.json` **and** local patches for vendored source (FlowDrop). Each patch comes with a corresponding md file that details the issue describing the patch that we will upload and try and get committed upstream.
+The process and documentation for applying patches are detailed in `patches/README.md`. We use patches when:
+
+- We need to update something that is gitignored and built during install such as contrib modules.
+- We need to update something locally that is committed but would ideally be committed upstream such as with FlowDrop's source code.
+
 #### FlowDrop JavaScript Build Files
 
 FlowDrop ships TWO JavaScript builds in `web/modules/contrib/flowdrop/modules/flowdrop_ui/build/flowdrop/`:
@@ -176,6 +183,20 @@ To verify which file is loaded, check browser DevTools Network tab for `flowdrop
 #### FlowDrop Sidebar Data Source
 
 The FlowDrop sidebar fetches nodes from `/api/flowdrop-agents/nodes` (flat list), NOT `/api/flowdrop-agents/nodes/by-category`. If you need data on each node for sidebar rendering (like `categoryWeight` for sorting), add it to `NodesController::getNodes()`.
+
+#### FlowDrop Source Code - Reading and Editing
+
+Sometimes you will need to see the source code and documentation for FlowDrop itself to make the changes that the User is requesting. Other times you may want to make changes to the source code and build the JS files directly.
+
+Information about this process is documents in `.claude/flowdrop-build.md` - Instructions for finding the flowdrop source code and building a new copy
+
+You should then create a patch and issue md file in the /patches/ directory following the rules in the readme.md.
+
+- Source lives in `packages/flowdrop/` (vendored snapshot of `d34dman/flowdrop`).
+- Drupal loads **built assets** from:
+  - `web/modules/contrib/flowdrop/modules/flowdrop_ui/build/flowdrop/`
+- DrupalForge deployments use the committed build assets (no npm build during
+  deploy).
 
 ## Recipes System
 
@@ -299,8 +320,11 @@ The `.claude/` directory contains documentation and context for AI-assisted deve
 .claude/
 ├── branch.md                    # Current branch context (update when switching)
 ├── branch-review.md             # Review agent findings (wiped each review)
-├── flowdrop-ui-agents.md        # Module architecture reference
+├── common-issues.md             # Common issues and solutions
+├── flowdrop-ui-agents.md        # Module architecture reference for the primary module we are developing
+├── mcp.md                       # MCP server integration docs (tool list, architecture)
 ├── planning.md                  # Historical roadmap and phases
+├── flowdrop-build.md            # Instructions for finding the flowdrop source code and building a new copy of it.
 ├── plans/                       # Issue-linked implementation plans
 │   ├── README.md                # Naming conventions & template
 │   ├── do-XXXXX-*.md            # Drupal.org issue plans
@@ -324,13 +348,28 @@ Plans are named to match the branch name in the module repository:
 
 ### Multi-Agent Workflow
 
-1. **Primary agent**: Works on branch, updates `branch.md`, creates/updates plan file
-2. **Review agent**: Reviews work, documents findings in `branch-review.md`
+1. **Primary agent**: Works on branch, updates `branch.md`, creates/updates plan file - although often they work directly in the issue plan file now.
+2. **Review agent**: Reviews work, documents findings in `branch-review.md` - Although often they work directly in the issue plan file now in a new section.
 3. **Technical notes**: All implementation notes and discoveries go in the plan file
 4. **Screenshots**: Place in `.claude/screenshots/` for AI visual analysis
 
 ### Key Reference Files
 
 - **flowdrop-ui-agents.md**: Detailed module architecture, data structures, APIs, and common gotchas
-- **branch.md**: Current working context, updated when switching branches
+- **mcp.md**: MCP server integration documentation (tool list, architecture)
+- **branch.md**: Current working context, updated when switching branches (tend to use the issue plan md files more than branch.md now)
 - **plans/{issue}.md**: Issue-specific implementation plan with tasks and technical notes
+- **common-issues.md**: Common issues and solutions encountered during development
+
+### Keeping mcp.md Updated
+
+The tool/agent list in `.claude/mcp.md` is **reference documentation** - a snapshot for human readers. Claude Code sees tools **dynamically** via the MCP protocol's `tools/list` method, so new agents/tools are automatically available when MCP is enabled.
+
+**When to update mcp.md:**
+- When a new module adds significant tools (e.g., installing a new `tool_*` module)
+- When creating agents that will be part of the standard install (not test-only agents)
+- When the MCP architecture or configuration changes
+
+**You don't need to update mcp.md for:**
+- Temporary test agents created during development
+- Agents that won't be committed to the repository

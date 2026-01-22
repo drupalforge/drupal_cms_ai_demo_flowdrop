@@ -48,4 +48,10 @@ echo "Note: Module installation, demo recipes, and configuration are handled by 
 echo "Clearing cache..."
 ddev drush cr
 
+echo ""
+echo "============================================================"
 echo "Done! FlowDrop dev environment is ready."
+echo ""
+echo "Optional: Enable MCP for Claude Code integration:"
+echo "  ddev flowdrop-dev-mcp enable"
+echo "============================================================"

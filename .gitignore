@@ -7,6 +7,10 @@
 # FlowDrop package source (separate branch)
 packages/
 
+# MCP server (downloaded/generated during setup)
+bin/
+.mcp.json
+
 /.devpanel/dumps/
 /.devpanel/salt.txt
 /.editorconfig
