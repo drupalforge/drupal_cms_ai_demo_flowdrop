@@ -54,3 +54,14 @@ Before running the setup command, make sure you have your OpenAI API key configu
 If you need to modify FlowDrop itself (Svelte + @xyflow/svelte), see:
 
 - `docs/flowdrop-build.md`
+
+#!/usr/bin/env sh
+
+## Description: Destroys and rebuilds the DDEV environment. This will delete and reinstall all dependencies.
+## Usage: rebuild
+## Example: "ddev rebuild"
+
+ddev drush sql:drop -y
+rm -r -f vendor $DDEV_DOCROOT composer.* patches.lock.json
+ddev restart
+
