@@ -172,11 +172,6 @@ echo
 echo 'Install AI explorer and logging tools.'
 drush -y pm:en ai_agents_explorer ai_api_explorer ai_logging ai_observability
 
-#== Install core Flowdrop modules.
-echo
-echo 'Install core Flowdrop modules.'
-drush -y pm:en flowdrop flowdrop_runtime flowdrop_pipeline flowdrop_workflow
-
 #== Install Flowdrop UI module.
 echo
 echo 'Install Flowdrop UI module.'
