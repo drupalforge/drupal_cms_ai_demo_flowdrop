@@ -4,10 +4,10 @@ dependencies:
   module:
     - ai_chatbot
   theme:
-    - drupal_cms_olivero
+    - mercury
 id: bundle_lister_chatbot
-theme: drupal_cms_olivero
-region: footer_bottom
+theme: mercury
+region: footer
 weight: 0
 provider: null
 plugin: ai_deepchat_block

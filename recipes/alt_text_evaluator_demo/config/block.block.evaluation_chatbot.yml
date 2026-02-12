@@ -5,7 +5,7 @@ dependencies:
   module:
     - ai_chatbot
   theme:
-    - drupal_cms_olivero
+    - gin
 id: evaluation_chatbot
 theme: gin
 region: content
