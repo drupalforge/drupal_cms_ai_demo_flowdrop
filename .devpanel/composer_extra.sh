@@ -17,5 +17,6 @@ composer require 'drupal/mcp_client:^1.0@alpha' -W
 # Get the AI Agents module
 composer require 'drupal/ai_agent_agent:dev-1.0.x'
 
-# Get the AI Agent dev version for latest features
-composer require 'drupal/ai_agents:1.2.x-dev@dev'
+# Get the AI module and AI Agents dev version for latest features
+composer require 'drupal/ai:1.3.x-dev@dev'
+composer require 'drupal/ai_agents:1.3.x-dev@dev'

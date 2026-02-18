@@ -16,5 +16,3 @@ config:
       - ai_agents.ai_agent.bundle_lister_assistant
     ai_assistant_api:
       - ai_assistant_api.ai_assistant.bundle_lister_assistant
-    block:
-      - block.block.bundle_lister_chatbot
