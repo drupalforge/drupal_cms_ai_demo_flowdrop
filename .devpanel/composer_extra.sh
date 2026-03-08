@@ -5,9 +5,9 @@ cd $APP_ROOT
 # Currently the recipe is beta.
 composer config minimum-stability dev
 
-# Get FlowDrop UI and FlowDrop UI Agents
-composer require 'drupal/flowdrop_ui:^0.0'
-composer require 'drupal/flowdrop_ui_agents:^1.0.0-alpha1'
+# Get FlowDrop UI and FlowDrop UI Agents (use 1.0.x-dev to match local dev branches)
+composer require 'drupal/flowdrop_ui:1.0.x-dev@dev'
+composer require 'drupal/flowdrop_ui_agents:1.0.x-dev@dev'
 composer require 'drupal/ai_provider_openai:^1.2'
 composer require 'drupal/tool:^1.0@alpha'
 
