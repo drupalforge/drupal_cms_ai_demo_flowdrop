@@ -3,7 +3,9 @@ set -eu -o pipefail
 cd $APP_ROOT
 
 # Create required composer.json and composer.lock files.
-composer create-project --no-install ${PROJECT:=drupal/cms}
+# Pin to 1.2.8 to match local dev (uses Olivero + default content).
+# drupal/cms 2.0+ switches to Mercury/Canvas theme.
+composer create-project --no-install ${PROJECT:=drupal/cms}:1.2.8
 cp -r "${PROJECT#*/}"/* ./
 rm -rf "${PROJECT#*/}" patches.lock.json
 

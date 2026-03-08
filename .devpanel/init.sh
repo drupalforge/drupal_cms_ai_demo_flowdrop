@@ -212,6 +212,11 @@ fi
 #== Disable Klaro consent for DeepChat chatbot.
 drush -n cset klaro.klaro_app.deepchat status 0
 
+#== Rebuild caches (required for routing and library discovery after module installs).
+echo
+echo 'Rebuild caches.'
+time drush cr
+
 #== Warm up caches.
 echo
 echo 'Run cron.'
