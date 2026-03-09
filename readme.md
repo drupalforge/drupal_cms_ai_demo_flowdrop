@@ -64,3 +64,4 @@ If you need to modify FlowDrop itself (Svelte + @xyflow/svelte), see:
 ddev drush sql:drop -y
 rm -r -f vendor $DDEV_DOCROOT composer.* patches.lock.json
 ddev restart
+
