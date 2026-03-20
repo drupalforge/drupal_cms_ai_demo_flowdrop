@@ -187,6 +187,11 @@ echo
 echo 'Install AI Alt Text Tools.'
 drush -y pm:en ai_alttext_tools
 
+#== Install AI Agents Experimental Collection (all 31 subagents).
+echo
+echo 'Install AI Agents Experimental Collection.'
+drush -y pm:en ai_agents_experimental_collection
+
 #== Enable AI logging (requests and responses).
 drush -n cset ai_logging.settings prompt_logging 1
 drush -n cset ai_logging.settings prompt_logging_output 1
