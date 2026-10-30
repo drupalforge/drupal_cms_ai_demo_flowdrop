@@ -7,10 +7,10 @@ composer config minimum-stability dev
 
 # Get FlowDrop UI and FlowDrop UI Agents (use 1.0.x-dev to match local dev branches)
 # Select the AI branch before the first install so its patches apply.
-composer require 'drupal/flowdrop_ui:1.0.x-dev@dev' 'drupal/ai:1.4.x-dev@dev'
+# Tool beta releases removed the entity tools required by the demo and its patches.
+composer require 'drupal/flowdrop_ui:1.0.x-dev@dev' 'drupal/ai:1.4.x-dev@dev' 'drupal/tool:1.0.0-alpha10'
 composer require 'drupal/flowdrop_ui_agents:1.0.x-dev@dev'
 composer require 'drupal/ai_provider_openai:^1.2'
-composer require 'drupal/tool:^1.0@alpha'
 
 # Get the MCP Client
 composer require 'drupal/mcp_client:^1.0@alpha' -W
