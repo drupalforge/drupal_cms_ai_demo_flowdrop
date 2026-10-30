@@ -8,7 +8,7 @@
             "#3563835: EntityFieldValueDefinitions tool fails with \"Missing bundle\" error for media and comment entities": "https://git.drupalcode.org/project/tool/-/merge_requests/66.patch"
         },
         "drupal/ai": {
-            "#3580423: Make it possible to set tools on agents programmatically": "https://git.drupalcode.org/project/ai/-/merge_requests/1336.diff"
+            "#3580423: Make it possible to @ mention a subagent": "https://git.drupalcode.org/project/ai/-/merge_requests/1336.diff"
         }
     }
 }
